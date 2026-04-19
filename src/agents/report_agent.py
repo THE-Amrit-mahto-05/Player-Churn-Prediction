@@ -1,6 +1,7 @@
 import json
 from src.llm_client import ask_llm
 from src.prompts.templates import SYSTEM_PROMPT, REPORT_PROMPT
+from src.output_models import validate_report_json
 
 
 class ReportAgent:
@@ -28,12 +29,14 @@ class ReportAgent:
         response = ask_llm(prompt, system_msg=SYSTEM_PROMPT)
 
         try:
-            return json.loads(response)
+            raw_report = json.loads(response)
+            return validate_report_json(raw_report)
         except json.JSONDecodeError:
             try:
                 start = response.index("{")
                 end = response.rindex("}") + 1
-                return json.loads(response[start:end])
+                raw_report = json.loads(response[start:end])
+                return validate_report_json(raw_report)
             except (ValueError, json.JSONDecodeError):
                 return {
                     "player_profile": {"summary": analysis},
