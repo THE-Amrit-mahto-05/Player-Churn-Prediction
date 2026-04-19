@@ -329,9 +329,12 @@ else:
 
                 with rag_col:
                     st.markdown("### RETENTION KNOWLEDGE BASE REFERENCES")
-                    time.sleep(0.5)
+                    time_lib.sleep(0.5)
                     st.caption("Document context retrieved locally via ChromaDB vectors mapping to the player's specific churn signals.")
                     st.markdown(f"<div class='rag-box'><b>Source:</b> <code>retention_strategies.md</code><br><br>{rag_context}</div>", unsafe_allow_html=True)
+                    
+                    st.markdown("<br>", unsafe_allow_html=True)
+                    st.caption(f"**Ethical Disclaimer:** {report.get('disclaimers', 'This AI decision-support system provides recommendations; human review is required before executing interventions.')}")
 
                 # --- PDF Export ---
                 st.markdown("---")
