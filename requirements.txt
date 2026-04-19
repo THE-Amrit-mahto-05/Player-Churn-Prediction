@@ -14,4 +14,6 @@ langchain-core
 
 # Phase 5: RAG
 chromadb
-sentence-transformersfpdf2
+sentence-transformers
+fpdf2
+protobuf==3.20.3
