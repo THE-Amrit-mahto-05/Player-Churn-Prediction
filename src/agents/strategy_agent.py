@@ -1,10 +1,13 @@
 import json
 from src.llm_client import ask_llm
 from src.prompts.templates import SYSTEM_PROMPT, STRATEGY_PROMPT
-
+from src.rag.retriever import StrategyRetriever
 
 class StrategyAgent:
     """Generates retention strategies based on player analysis."""
+
+    def __init__(self):
+        self.retriever = StrategyRetriever()
 
     def generate(self, analysis: str, churn_prob: float, genre: str = "Unknown") -> dict:
         """
@@ -23,10 +26,14 @@ class StrategyAgent:
         else:
             risk_level = "Low"
 
+        # Fetch knowledge base context based on the analysis
+        context = self.retriever.get_context(analysis)
+
         prompt = STRATEGY_PROMPT.format(
             analysis=analysis,
             risk_level=risk_level,
-            genre=genre
+            genre=genre,
+            context=context
         )
 
         response = ask_llm(prompt, system_msg=SYSTEM_PROMPT)

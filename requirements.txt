@@ -2,3 +2,16 @@ streamlit>=1.30.0
 pandas
 scikit-learn
 joblib
+
+# --- Milestone 2 Dependencies ---
+# Phase 1: LLM
+groq
+python-dotenv
+
+# Phase 4: LangGraph Workflow
+langgraph
+langchain-core
+
+# Phase 5: RAG
+chromadb
+sentence-transformers

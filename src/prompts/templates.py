@@ -14,9 +14,14 @@ TASK:
 
 FORMAT: 3-4 sentences maximum."""
 
-STRATEGY_PROMPT = """Based on this analysis: {analysis}
+STRATEGY_PROMPT = """Based on this player analysis: 
+{analysis}
+
 CHURN RISK LEVEL: {risk_level}
 GAME GENRE: {genre}
+
+INDUSTRY CONTEXT (Use these proven strategies if relevant to the player):
+{context}
 
 TASK: Generate 3 personalized retention strategies.
 FORMAT: Respond ONLY with a valid JSON object:
