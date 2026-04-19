@@ -212,7 +212,7 @@ else:
             
             with col_action:
                 st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
-                st.markdown("### Deploy AI Agent")
+                st.markdown("### AI Agent")
                 selected_idx = st.selectbox(
                     "Target Player ID (Index):", 
                     options=at_risk_df.index,
