@@ -28,9 +28,35 @@ st.markdown("""
         font-family: 'Inter', 'Roboto', sans-serif;
     }
     
-    /* Hide some default Streamlit elements for a cleaner look */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+
+    /* Glassmorphism Sidebar */
+    [data-testid="stSidebar"] {
+        background: rgba(255, 255, 255, 0.02) !important;
+        backdrop-filter: blur(20px) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Animations */
+    @keyframes pulse-red {
+        0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+    }
+    @keyframes pulse-orange {
+        0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+    }
+    
+    .neon-logo {
+        text-align: center;
+        font-size: 60px;
+        color: #38bdf8;
+        text-shadow: 0 0 10px #38bdf8, 0 0 20px #818cf8, 0 0 40px #c084fc;
+        margin-bottom: -15px;
+    }
 
     /* Glassmorphism Cards */
     .glass-card {
@@ -49,7 +75,6 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.15);
     }
     
-    /* Gradients and Text */
     .gradient-text {
         background: linear-gradient(to right, #00f2fe, #4facfe, #00f2fe);
         -webkit-background-clip: text;
@@ -62,28 +87,25 @@ st.markdown("""
     .badge-critical { 
         background: rgba(220, 38, 38, 0.15); color: #fca5a5; 
         border: 1px solid rgba(220, 38, 38, 0.5); 
-        box-shadow: 0 0 15px rgba(220, 38, 38, 0.4);
+        animation: pulse-red 2s infinite;
         padding: 6px 12px; border-radius: 8px; font-weight: bold; 
     }
     .badge-high { 
         background: rgba(249, 115, 22, 0.15); color: #fdba74; 
         border: 1px solid rgba(249, 115, 22, 0.5); 
-        box-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
+        animation: pulse-orange 2s infinite;
         padding: 6px 12px; border-radius: 8px; font-weight: bold; 
     }
     .badge-healthy { 
         background: rgba(34, 197, 94, 0.15); color: #86efac; 
         border: 1px solid rgba(34, 197, 94, 0.5); 
-        box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
         padding: 6px 12px; border-radius: 8px; font-weight: bold; 
     }
 
-    /* Strategy Priority Badges */
     .prio-high { background: #ef4444; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold;}
     .prio-medium { background: #f59e0b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold;}
     .prio-low { background: #10b981; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold;}
 
-    /* RAG Context Box */
     .rag-box {
         background: rgba(14, 165, 233, 0.05);
         border-left: 4px solid #0ea5e9;
@@ -93,6 +115,18 @@ st.markdown("""
         line-height: 1.6;
         color: #e0f2fe;
     }
+    
+    .progress-bar-container {
+        width: 100%;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        margin-top: 5px;
+    }
+    .progress-bar {
+        height: 8px;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #ef4444, #f97316);
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -101,8 +135,9 @@ display_data = None
 results_df = pd.DataFrame()
 
 with st.sidebar:
-    st.markdown("<h2 class='gradient-text'>Player Retention AI</h2>", unsafe_allow_html=True)
-    st.markdown("""<div style='color: #a1a1aa; font-size: 0.9em; margin-bottom: 20px;'>Enterprise Churn Prediction & automated RAG intervention system.</div>""", unsafe_allow_html=True)
+    st.markdown("<div class='neon-logo'>🎮</div>", unsafe_allow_html=True)
+    st.markdown("<h2 class='gradient-text' style='text-align:center;'>Player Retention AI</h2>", unsafe_allow_html=True)
+    st.markdown("""<div style='color: #a1a1aa; font-size: 0.9em; text-align:center; margin-bottom: 20px;'>Enterprise Churn Prediction & automated RAG intervention system.</div>""", unsafe_allow_html=True)
     
     st.markdown("### DATA INGESTION")
     uploaded_file = st.file_uploader("Upload Player CSV", type="csv")
@@ -134,21 +169,24 @@ with st.sidebar:
                 
             results_df['Risk Status'] = results_df['Churn Prob (%)'].apply(get_risk_badge)
             time.sleep(0.5) 
-            
 
-        st.markdown("<br>### GLOBAL ANALYTICS", unsafe_allow_html=True)
+        st.markdown("<br>### 🌍 GLOBAL ANALYTICS", unsafe_allow_html=True)
         st.markdown(f"""
         <div class='glass-card' style='padding:15px; margin-bottom:10px;'>
-            <div style='color:#a1a1aa; font-size:12px; font-weight:bold;'>TOTAL PLAYERS SCANNED</div>
-            <div style='font-size:24px; font-weight:900;'>{len(results_df)}</div>
+            <div style='color:#a1a1aa; font-size:11px; font-weight:bold;'>TOTAL PLAYERS ANALYZED</div>
+            <div style='font-size:20px; font-weight:900;'>{len(results_df)}</div>
         </div>
         <div class='glass-card' style='padding:15px; margin-bottom:10px;'>
-            <div style='color:#a1a1aa; font-size:12px; font-weight:bold;'>CRITICAL CHURN RISK</div>
-            <div style='font-size:24px; font-weight:900; color:#ef4444;'>{len(results_df[results_df['Churn Prob (%)'] >= 75])}</div>
+            <div style='color:#a1a1aa; font-size:11px; font-weight:bold;'>CRITICAL CHURN RISK</div>
+            <div style='font-size:20px; font-weight:900; color:#ef4444;'>{len(results_df[results_df['Churn Prob (%)'] >= 75])}</div>
+        </div>
+        <div class='glass-card' style='padding:15px; margin-bottom:10px;'>
+            <div style='color:#a1a1aa; font-size:11px; font-weight:bold;'>AVG RISK GAUGE</div>
+            <div style='font-size:20px; font-weight:900; color:#f59e0b;'>{round(results_df['Churn Prob (%)'].mean(), 1)}%</div>
         </div>
         """, unsafe_allow_html=True)
     
-    st.divider()
+    st.caption("Powered by LangGraph & ChromaDB")
 
 if uploaded_file is None:
     st.markdown("<h1 class='gradient-text' style='font-size: 3.5rem; text-align: center; margin-top: 10vh;'>Player Retention AI</h1>", unsafe_allow_html=True)
@@ -156,7 +194,7 @@ if uploaded_file is None:
 else:
     st.markdown("<h1 class='gradient-text'>Risk Control Center</h1>", unsafe_allow_html=True)
 
-    tab1, tab2 = st.tabs(["At-Risk Intervention", "Live Telemetry Feed"])
+    tab1, tab2 = st.tabs(["🚨 At-Risk Intervention", "📊 Live Telemetry Feed"])
     
     with tab2:
         st.dataframe(results_df, use_container_width=True)
@@ -177,7 +215,7 @@ else:
                 selected_idx = st.selectbox(
                     "Target Player ID (Index):", 
                     options=at_risk_df.index,
-                    format_func=lambda x: f"Idx {x} - {at_risk_df.loc[x, 'Risk Status'].split()[0]} Risk"
+                    format_func=lambda x: f"Idx {x} - {at_risk_df.loc[x, 'Risk Status'].split()[1]} Risk"
                 )
                 generate_pressed = st.button("Generate AI Strategy", type="primary", use_container_width=True)
                 st.markdown("</div>", unsafe_allow_html=True)
@@ -225,13 +263,12 @@ else:
                 rag_context = result.get('rag_context', '')
                 prob_val = selected_player_row['Churn Prob (%)']
                 
-                # Determine metric badge class
                 if prob_val >= 75: 
                     badge_css = "badge-critical"
                     risk_txt = "CRITICAL"
                 elif prob_val >= 40: 
                     badge_css = "badge-high"
-                    risk_txt = "HIGH RISK"
+                    risk_txt = "HIGH"
                 else: 
                     badge_css = "badge-healthy"
                     risk_txt = "HEALTHY"
@@ -239,18 +276,21 @@ else:
                 trend = report.get('risk_analysis', {}).get('trend', '---')
                 
                 st.markdown(f"""
-                <div class='glass-card' style='display:flex; justify-content:space-around; align-items:center;'>
-                    <div style='text-align:center;'>
-                        <div style='color:#a1a1aa; font-size:12px; margin-bottom:8px;'>CHURN PROBABILITY</div>
-                        <span class='{badge_css}' style='font-size:24px;'>{prob_val}%</span>
-                    </div>
-                    <div style='text-align:center;'>
-                        <div style='color:#a1a1aa; font-size:12px; margin-bottom:8px;'>SYSTEM CLASSIFICATION</div>
-                        <span class='{badge_css}' style='font-size:24px;'>{risk_txt}</span>
-                    </div>
-                    <div style='text-align:center;'>
-                        <div style='color:#a1a1aa; font-size:12px; margin-bottom:8px;'>ENGAGEMENT TREND</div>
-                        <span style='font-size:24px; font-weight:bold; color:#e2e8f0;'>{trend}</span>
+                <div class='glass-card'>
+                    <div style='display:flex; justify-content:space-around; align-items:center;'>
+                        <div style='text-align:center; width:33%;'>
+                            <div style='color:#a1a1aa; font-size:12px; margin-bottom:8px;'>CHURN PROBABILITY</div>
+                            <span class='{badge_css}' style='font-size:24px;'>{prob_val}%</span>
+                            <div class='progress-bar-container'><div class='progress-bar' style='width: {prob_val}%;'></div></div>
+                        </div>
+                        <div style='text-align:center; width:33%;'>
+                            <div style='color:#a1a1aa; font-size:12px; margin-bottom:8px;'>SYSTEM CLASSIFICATION</div>
+                            <span class='{badge_css}' style='font-size:24px;'>{risk_txt} RISK</span>
+                        </div>
+                        <div style='text-align:center; width:33%;'>
+                            <div style='color:#a1a1aa; font-size:12px; margin-bottom:8px;'>ENGAGEMENT TREND</div>
+                            <span style='font-size:24px; font-weight:bold; color:#e2e8f0;'>{trend}</span>
+                        </div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -259,8 +299,6 @@ else:
                 
                 with content_col:
                     st.markdown("### Player Profile Summary")
-                    
-                    # ChatGPT style typing effect generator
                     def stream_text(text):
                         for word in text.split(" "):
                             yield word + " "
@@ -272,7 +310,7 @@ else:
                     
                     st.markdown("### Clean Action Cards (Recommendations)")
                     for rec in report.get('recommendations', []):
-                        time.sleep(0.6) 
+                        time.sleep(0.6)
                         prio = rec.get('priority', 'Medium')
                         prio_class = f"prio-{prio.lower()}"
                         
