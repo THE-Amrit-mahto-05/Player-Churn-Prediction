@@ -149,7 +149,6 @@ with st.sidebar:
         """, unsafe_allow_html=True)
     
     st.divider()
-    st.caption("Powered by LangGraph & ChromaDB")
 
 if uploaded_file is None:
     st.markdown("<h1 class='gradient-text' style='font-size: 3.5rem; text-align: center; margin-top: 10vh;'>Player Retention AI</h1>", unsafe_allow_html=True)
@@ -188,16 +187,19 @@ else:
                 selected_player_row = at_risk_df.loc[selected_idx]
                 
                 # --- Execution UI ---
-                with st.status("Agentic System Working...", expanded=True) as status:
+                import time as time_lib
+                start_time = time_lib.time()
+                
+                with st.status("Agentic System Working... (Estimated Time: ~4s)", expanded=True) as status:
                     st.write("Validating formatting and applying safe tensors...")
-                    time.sleep(0.6)
+                    time_lib.sleep(0.6)
                     player_dict = selected_player_row.drop(['Churn Prob (%)', 'Risk Status']).to_dict()
                     cleaned_player = validate_and_prepare_player_data(player_dict)
                     
                     st.write("**Analyzer Agent**: Decoding structural behavior patterns...")
-                    time.sleep(0.8)
+                    time_lib.sleep(0.8)
                     st.write("**RAG Retriever**: Searching Knowledge Base (`retention_strategies.md`)...")
-                    time.sleep(0.8)
+                    time_lib.sleep(0.8)
                     st.write("**Strategy & Report Agents**: Structuring executive JSON output...")
                     
                     result = run_churn_analysis_workflow(
@@ -206,8 +208,11 @@ else:
                         genre=cleaned_player.get('GameGenre', 'Unknown')
                     )
                     
+                    end_time = time_lib.time()
+                    elapsed = round(end_time - start_time, 2)
+                    
                     if result.get('status') == 'complete':
-                        status.update(label="Final Report Structured", state="complete", expanded=False)
+                        status.update(label=f"Final Report Structured locally in {elapsed}s", state="complete", expanded=False)
                     else:
                         status.update(label="Agent Workflow Failed", state="error", expanded=False)
                         st.error(f"Workflow error: {result.get('status')}")
@@ -267,7 +272,7 @@ else:
                     
                     st.markdown("### Clean Action Cards (Recommendations)")
                     for rec in report.get('recommendations', []):
-                        time.sleep(0.6) # Cascading delay for dramatic UI effect
+                        time.sleep(0.6) 
                         prio = rec.get('priority', 'Medium')
                         prio_class = f"prio-{prio.lower()}"
                         
