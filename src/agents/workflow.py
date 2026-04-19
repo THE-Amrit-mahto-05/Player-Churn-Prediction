@@ -12,6 +12,7 @@ class AgentState(TypedDict):
     genre: str
     analysis: str
     strategies: dict
+    rag_context: str
     report: dict
     status: str
 
@@ -29,10 +30,11 @@ def strategize_node(state: AgentState):
     try:
         agent = StrategyAgent()
         result = agent.generate(state['analysis'], state['churn_prob'], state['genre'])
-        return {"strategies": result, "status": "strategizing"}
+        return {"strategies": result.get("strategies_json", result), "rag_context": result.get("rag_context", ""), "status": "strategizing"}
     except Exception as e:
         return {
             "strategies": {"strategies": [{"action": "Contact Support", "priority": "Low", "rationale": "System Error"}]},
+            "rag_context": "Error fetching knowledge base.",
             "status": "error_strategizing"
         }
 
@@ -77,6 +79,7 @@ def run_churn_analysis_workflow(player_data: dict, churn_prob: float, genre: str
         "genre": genre,
         "analysis": "",
         "strategies": {},
+        "rag_context": "",
         "report": {},
         "status": "starting"
     }

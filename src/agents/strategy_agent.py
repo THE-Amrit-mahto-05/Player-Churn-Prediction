@@ -38,17 +38,15 @@ class StrategyAgent:
 
         response = ask_llm(prompt, system_msg=SYSTEM_PROMPT)
 
-        
         try:
-            return json.loads(response)
+            strategies_json = json.loads(response)
         except json.JSONDecodeError:
-
             try:
                 start = response.index("{")
                 end = response.rindex("}") + 1
-                return json.loads(response[start:end])
+                strategies_json = json.loads(response[start:end])
             except (ValueError, json.JSONDecodeError):
-                return {
+                strategies_json = {
                     "strategies": [
                         {
                             "action": "Unable to parse strategies",
@@ -57,3 +55,8 @@ class StrategyAgent:
                         }
                     ]
                 }
+                
+        return {
+            "strategies_json": strategies_json,
+            "rag_context": context
+        }
